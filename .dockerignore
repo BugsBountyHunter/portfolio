@@ -1,0 +1,13 @@
+.git
+.next
+node_modules
+out
+test-results
+playwright-report
+design-reference
+docs
+.superpowers
+.env
+.env.*
+Dockerfile*
+compose*.yaml
