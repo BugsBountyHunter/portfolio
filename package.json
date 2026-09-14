@@ -8,7 +8,8 @@
     "start:static": "npx serve out -l 4173",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run build && npm run test:e2e"
+    "check": "npm run typecheck && npm run build && npm run test:e2e",
+    "test": "vitest run"
   },
   "dependencies": {
     "next": "16.3.3",
@@ -20,6 +21,7 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^5.0.0"
   }
 }
