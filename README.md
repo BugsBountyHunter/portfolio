@@ -98,7 +98,7 @@ docker compose down
 > that external action before running this command. The script is intentionally
 > not run as part of routine local validation.
 
-From any local directory, run:
+From the repository root, run:
 
 ```bash
 bash scripts/deploy.sh
@@ -112,8 +112,10 @@ remote source directory `/home/saber/apps/ahmed-portfolio/source`. Its rsync
 local build, dependency, test, coverage, and operating-system metadata.
 
 After synchronization, the remote command runs `docker compose up -d --build
---remove-orphans`, shows service status, and verifies the localhost health
-endpoint. No secrets, TLS configuration, or domain configuration are included.
+--remove-orphans`, shows service status, then makes up to 20 localhost health
+checks. Each check uses bounded connect and response timeouts; a clear failure
+is returned if the service never becomes ready. No secrets, TLS configuration,
+or domain configuration are included.
 
 Inspect the remote service and recent logs:
 
@@ -130,14 +132,18 @@ ssh myserver-saber 'cd /home/saber/apps/ahmed-portfolio/source && docker compose
 ### Roll back to a known application revision
 
 Deployment is source-based, so roll back by starting from a clean local
-checkout of a known-good application revision, then deploying it with explicit
-approval. The normal deployment gates run again before the remote source and
-container are replaced.
+checkout of a previously deployed, known-good application revision that includes
+this deployment tooling, then deploying it with explicit approval. The normal
+deployment gates run again before the remote source and container are replaced.
 
 ```bash
 git switch --detach <known-good-app-revision>
 bash scripts/deploy.sh
 ```
+
+Older revisions, including the `design-v1` source, are comparison and recovery
+references only. They predate the Docker deployment tooling and cannot be
+deployed directly with this script.
 
 Return to the development branch after the rollback if appropriate:
 
