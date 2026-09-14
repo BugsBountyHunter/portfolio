@@ -29,7 +29,7 @@ container_id="$(docker run --detach --platform linux/amd64 --publish "127.0.0.1:
 
 health_url="http://127.0.0.1:${port}/healthz"
 for attempt in {1..20}; do
-  if curl --fail --silent "$health_url" >/dev/null; then
+  if curl --connect-timeout 2 --max-time 5 --fail --silent "$health_url" >/dev/null; then
     break
   fi
 
@@ -41,4 +41,4 @@ for attempt in {1..20}; do
   sleep 1
 done
 
-curl --fail --silent --show-error "http://127.0.0.1:${port}/" | grep --fixed-strings --quiet "move business forward"
+curl --connect-timeout 2 --max-time 5 --fail --silent --show-error "http://127.0.0.1:${port}/" | grep --fixed-strings --quiet "move business forward"
