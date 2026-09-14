@@ -166,12 +166,14 @@ The first Contabo deployment completed successfully on 14 September 2026.
 Cloudflare Workers provides the public HTTPS endpoint:
 
 ```text
-https://ahmed-saber-portfolio.developersaber.workers.dev
+https://me.developersaber.workers.dev
 ```
 
-The Worker source is preserved in `cloudflare/worker.js`. It proxies requests
-to the Contabo hostname `vmi3535381.contaboserver.net` on port 80. The Worker
-was deployed directly through the Cloudflare API and does not require GitHub.
+The original `ahmed-saber-portfolio.developersaber.workers.dev` address remains
+available as a compatibility alias. The Worker source is preserved in
+`cloudflare/worker.js`. It proxies requests to the Contabo hostname
+`vmi3535381.contaboserver.net` on port 80. The Worker was deployed directly
+through the Cloudflare API and does not require GitHub.
 
 This gives visitors an encrypted connection to Cloudflare, but the connection
 from Cloudflare to the Contabo origin is currently HTTP. End-to-end TLS should
