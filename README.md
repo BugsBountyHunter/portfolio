@@ -151,18 +151,28 @@ Return to the development branch after the rollback if appropriate:
 git switch feat/nextjs-portfolio
 ```
 
-### Initial deployment record (pending Task 8)
+### Initial deployment record
 
-The first deployment has not yet been performed. Task 8 will record the values
-after an approved deployment; do not invent them here.
+The first Contabo deployment completed successfully on 14 September 2026.
 
 | Field | Value |
 | --- | --- |
-| Local Git revision | Pending initial deployment |
-| Server image ID | Pending initial deployment |
-| Server health verification | Pending initial deployment |
+| Local Git revision | `bf64ecdf049f0e89a92fe9c6923505d98e9e218e` |
+| Server image ID | `sha256:331984ae61bd2cc094d2a9dab9c448330ab5a97db16137335b1795baa5e63143` |
+| Server health verification | `http://127.0.0.1/healthz` returned `ok` |
 
-## TLS and domain
+## HTTPS edge endpoint
 
-HTTPS is intentionally deferred until a real domain points to `169.58.240.185`.
-This migration does not configure TLS, certificates, redirects, or a domain.
+Cloudflare Workers provides the public HTTPS endpoint:
+
+```text
+https://ahmed-saber-portfolio.developersaber.workers.dev
+```
+
+The Worker source is preserved in `cloudflare/worker.js`. It proxies requests
+to the Contabo hostname `vmi3535381.contaboserver.net` on port 80. The Worker
+was deployed directly through the Cloudflare API and does not require GitHub.
+
+This gives visitors an encrypted connection to Cloudflare, but the connection
+from Cloudflare to the Contabo origin is currently HTTP. End-to-end TLS should
+be added later by attaching a custom domain and configuring HTTPS on the origin.
