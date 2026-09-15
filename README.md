@@ -5,15 +5,21 @@ deployed to the Saber server through the saved `myserver-saber` SSH alias.
 
 ## Architecture
 
-- Next.js App Router statically exports the portfolio into `out/`.
-- Portfolio content is maintained in `src/content/portfolio.ts`; focused React
-  components render the sections.
+- `nextjs/` contains only the Next.js application, its dependencies, and its
+  application tests. The App Router statically exports the portfolio into
+  `nextjs/out/`.
+- Portfolio content is maintained in `nextjs/src/content/portfolio.ts`;
+  focused React components render the sections.
 - A multi-stage Docker build creates the static export and copies it into
   Nginx. Docker Compose runs the `ahmed-saber-portfolio` container on port 80
   with a `/healthz` health check.
-- `scripts/deploy.sh` validates the local checkout, synchronizes only the
-  application source to `/home/saber/apps/ahmed-portfolio/source`, and runs
-  Docker Compose on the server.
+- `deployment/` contains Docker, Nginx, Contabo automation, container smoke
+  tests, and the Cloudflare Worker source.
+- `documentation/` contains the design specification, historical
+  implementation plan, and immutable design references.
+- `deployment/scripts/deploy.sh` validates the local checkout, synchronizes
+  only the project to `/home/saber/apps/ahmed-portfolio/source`, and runs Docker
+  Compose on the server.
 
 GitHub is not required for development or deployment. No Git remote is
 configured for this repository; the deployment wrapper uses SSH and `rsync`
@@ -31,6 +37,7 @@ directly.
 ## Local setup and checks
 
 ```bash
+cd nextjs
 npm ci
 npm run dev
 ```
@@ -56,11 +63,12 @@ npm run check
 
 ## Design v1 reference
 
-`design-reference/v1/` is the immutable source-and-screenshot reference for
-the approved first design, anchored by the `design-v1` Git tag. Do not edit
-that directory after its initial commit. A visual or responsive change requires
-explicit approval, a new versioned reference (for example `v2`), and matching
-updates to the design documentation and tests; it must not overwrite v1.
+`documentation/design-reference/v1/` is the immutable source-and-screenshot
+reference for the approved first design, anchored by the `design-v1` Git tag.
+Do not edit that directory after its initial commit. A visual or responsive
+change requires explicit approval, a new versioned reference (for example
+`v2`), and matching updates to the design documentation and tests; it must not
+overwrite v1.
 
 To restore the legacy design-v1 HTML locally for comparison:
 
@@ -73,8 +81,8 @@ git show design-v1:dist/index.html > /tmp/portfolio-design-v1.html
 Build and run the production container locally:
 
 ```bash
-docker compose up -d --build
-docker compose ps
+docker compose -f deployment/compose.yaml up -d --build
+docker compose -f deployment/compose.yaml ps
 curl --fail --silent http://127.0.0.1/healthz
 ```
 
@@ -83,13 +91,13 @@ both named `ahmed-saber-portfolio` and serve port 80. Run the end-to-end
 container check, which builds the image and uses a temporary loopback port:
 
 ```bash
-bash tests/container-smoke.sh
+bash deployment/tests/container-smoke.sh
 ```
 
 Stop the local Compose service when finished:
 
 ```bash
-docker compose down
+docker compose -f deployment/compose.yaml down
 ```
 
 ## Deployment
@@ -101,32 +109,33 @@ docker compose down
 From the repository root, run:
 
 ```bash
-bash scripts/deploy.sh
+bash deployment/scripts/deploy.sh
 ```
 
 The script resolves the repository root, records the local Git revision in its
-output, then runs `npm ci`, `npm run check`, and `bash tests/container-smoke.sh`
-before contacting the server. It creates and synchronizes only the dedicated
-remote source directory `/home/saber/apps/ahmed-portfolio/source`. Its rsync
-`--delete` option is scoped strictly to that directory; it excludes Git and
-local build, dependency, test, coverage, and operating-system metadata.
+output, then runs `npm --prefix nextjs ci`, `npm --prefix nextjs run check`, and
+`bash deployment/tests/container-smoke.sh` before contacting the server. It
+creates and synchronizes only the dedicated remote source directory
+`/home/saber/apps/ahmed-portfolio/source`. Its rsync `--delete` option is scoped
+strictly to that directory; it excludes Git and local build, dependency, test,
+coverage, and operating-system metadata.
 
-After synchronization, the remote command runs `docker compose up -d --build
---remove-orphans`, shows service status, then makes up to 20 localhost health
-checks. Each check uses bounded connect and response timeouts; a clear failure
-is returned if the service never becomes ready. No secrets, TLS configuration,
-or domain configuration are included.
+After synchronization, the remote command uses
+`deployment/compose.yaml`, builds and starts the service, shows its status, then
+makes up to 20 localhost health checks. Each check uses bounded connect and
+response timeouts; a clear failure is returned if the service never becomes
+ready. No secrets, TLS configuration, or domain configuration are included.
 
 Inspect the remote service and recent logs:
 
 ```bash
-ssh myserver-saber 'cd /home/saber/apps/ahmed-portfolio/source && docker compose ps && docker compose logs --tail=100 portfolio'
+ssh myserver-saber 'cd /home/saber/apps/ahmed-portfolio/source && docker compose -f deployment/compose.yaml ps && docker compose -f deployment/compose.yaml logs --tail=100 portfolio'
 ```
 
 Stop the remote service:
 
 ```bash
-ssh myserver-saber 'cd /home/saber/apps/ahmed-portfolio/source && docker compose down'
+ssh myserver-saber 'cd /home/saber/apps/ahmed-portfolio/source && docker compose -f deployment/compose.yaml down'
 ```
 
 ### Roll back to a known application revision
@@ -138,7 +147,7 @@ deployment gates run again before the remote source and container are replaced.
 
 ```bash
 git switch --detach <known-good-app-revision>
-bash scripts/deploy.sh
+bash deployment/scripts/deploy.sh
 ```
 
 Older revisions, including the `design-v1` source, are comparison and recovery
@@ -150,6 +159,32 @@ Return to the development branch after the rollback if appropriate:
 ```bash
 git switch feat/nextjs-portfolio
 ```
+
+## GitHub CI/CD
+
+Pull requests and pushes to `main` run `.github/workflows/ci.yml`. The workflow
+type-checks, unit-tests, builds, and browser-tests the Next.js application, then
+builds, smoke-tests, and vulnerability-scans the production container.
+
+After CI succeeds on `main`, `.github/workflows/deploy.yml` publishes an
+immutable `ghcr.io/<owner>/<repository>:<git-sha>` image. Its deployment job is
+attached to the protected `production` GitHub environment, pulls that exact
+image on the Saber server, starts it with Compose, and verifies `/healthz`.
+Configure these `production` environment secrets before enabling deployment:
+
+- `SSH_HOST`: production server hostname.
+- `SSH_USER`: SSH account with Docker access.
+- `SSH_PRIVATE_KEY`: dedicated Ed25519 deployment private key.
+- `SSH_KNOWN_HOSTS`: pinned `known_hosts` entry for the server.
+- `GHCR_USERNAME`: GitHub account allowed to pull the package.
+- `GHCR_READ_TOKEN`: fine-grained, read-only package token.
+
+Require approval on the `production` environment for the initial releases.
+Repository Actions permissions must allow workflows to write packages.
+
+To roll back, run the **Roll back production** workflow and enter the complete
+Git commit SHA of a previously published, known-good image. The rollback uses
+the same protected environment and verifies the service health endpoint.
 
 ### Initial deployment record
 
@@ -171,7 +206,7 @@ https://me.developersaber.workers.dev
 
 The original `ahmed-saber-portfolio.developersaber.workers.dev` address remains
 available as a compatibility alias. The Worker source is preserved in
-`cloudflare/worker.js`. It proxies requests to the Contabo hostname
+`deployment/cloudflare/worker.js`. It proxies requests to the Contabo hostname
 `vmi3535381.contaboserver.net` on port 80. The Worker was deployed directly
 through the Cloudflare API and does not require GitHub.
 

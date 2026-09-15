@@ -1,0 +1,57 @@
+name: Roll back production
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_sha:
+        description: Full Git commit SHA of a previously published image
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    name: Roll back production
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - name: Deploy selected image
+        env:
+          REPOSITORY: ${{ github.repository }}
+          IMAGE_SHA: ${{ inputs.image_sha }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+        run: |
+          if [[ ! "$IMAGE_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "image_sha must be a full lowercase 40-character Git SHA" >&2
+            exit 1
+          fi
+          if [[ ! "$GHCR_USERNAME" =~ ^[A-Za-z0-9-]+$ ]]; then
+            echo "GHCR_USERNAME is invalid" >&2
+            exit 1
+          fi
+          IMAGE="ghcr.io/${REPOSITORY,,}:$IMAGE_SHA"
+          printf '%s' "$GHCR_READ_TOKEN" | ssh "$SSH_USER@$SSH_HOST" "docker login ghcr.io --username '$GHCR_USERNAME' --password-stdin"
+          ssh "$SSH_USER@$SSH_HOST" "cd /home/saber/apps/ahmed-portfolio/source && PORTFOLIO_IMAGE='$IMAGE' docker compose -f deployment/compose.yaml pull && PORTFOLIO_IMAGE='$IMAGE' docker compose -f deployment/compose.yaml up -d --no-build --remove-orphans"
+      - name: Verify rollback health
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: ssh "$SSH_USER@$SSH_HOST" 'curl --fail --silent --show-error --connect-timeout 2 --max-time 5 http://127.0.0.1/healthz'

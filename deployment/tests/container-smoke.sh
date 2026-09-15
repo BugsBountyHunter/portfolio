@@ -5,6 +5,9 @@ readonly image="ahmed-saber-portfolio:1.0.0"
 container_id=""
 port=""
 
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+repo_root="$(cd -- "$script_dir/../.." && pwd -P)"
+
 cleanup() {
   if [[ -n "$container_id" ]]; then
     docker rm --force "$container_id" >/dev/null 2>&1 || true
@@ -24,7 +27,11 @@ if [[ -z "$port" ]]; then
   exit 1
 fi
 
-docker build --platform linux/amd64 --tag "$image" .
+docker build \
+  --platform linux/amd64 \
+  --file "$repo_root/deployment/Dockerfile" \
+  --tag "$image" \
+  "$repo_root"
 container_id="$(docker run --detach --platform linux/amd64 --publish "127.0.0.1:${port}:80" "$image")"
 
 health_url="http://127.0.0.1:${port}/healthz"

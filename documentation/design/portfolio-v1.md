@@ -55,8 +55,7 @@ Typography:
 
 ## Future change policy
 
-- Never edit files under `design-reference/v1/` after they are created.
-- Record intentional design changes in a new `docs/design/portfolio-vN.md` file and `design-vN` tag.
+- Never edit files under `documentation/design-reference/v1/` after they are created.
+- Record intentional design changes in a new `documentation/design/portfolio-vN.md` file and `design-vN` tag.
 - Run visual regression checks against the v1 desktop and mobile screenshots during migration.
 - After migration, update screenshots only when a new design version is explicitly approved; do not overwrite v1 baselines.
-

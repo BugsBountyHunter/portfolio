@@ -10,6 +10,11 @@
 
 **Spec:** `docs/design/portfolio-v1.md`
 
+> Historical path note (15 September 2026): this plan records the paths used
+> during the original migration. The maintained project now separates the
+> application under `nextjs/`, operations under `deployment/`, and references
+> under `documentation/`. See the repository `README.md` for current commands.
+
 ## Global Constraints
 
 - Preserve the visual and responsive contract in `docs/design/portfolio-v1.md` unless a change is explicitly approved.

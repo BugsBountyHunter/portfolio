@@ -1,9 +1,10 @@
 services:
   portfolio:
     build:
-      context: .
+      context: ..
+      dockerfile: deployment/Dockerfile
       target: runtime
-    image: ahmed-saber-portfolio:1.0.0
+    image: ${PORTFOLIO_IMAGE:-ahmed-saber-portfolio:1.0.0}
     container_name: ahmed-saber-portfolio
     platform: linux/amd64
     restart: unless-stopped
