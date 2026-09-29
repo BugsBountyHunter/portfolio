@@ -10,7 +10,7 @@ describe("portfolio content", () => {
       "Digital Roots GTC",
       "Softlock",
     ]);
-    expect(portfolio.links.github).toBe("https://github.com/DEV-A7med");
+    expect(portfolio.links.github).toBe("https://github.com/BugsBountyHunter");
     expect(portfolio.links.email).toBe("mailto:developersaber@gmail.com");
   });
 });
