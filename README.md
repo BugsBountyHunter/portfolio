@@ -162,7 +162,7 @@ git switch feat/nextjs-portfolio
 
 ## GitHub CI/CD
 
-Pull requests and pushes to `main` run `.github/workflows/ci.yml`. The workflow
+Pull requests and pushes to `main` run `.github/workflows/build.yml` (the `CI` workflow). The workflow
 type-checks, unit-tests, builds, and browser-tests the Next.js application, then
 builds, smoke-tests, and vulnerability-scans the production container.
 
