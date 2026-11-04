@@ -5,7 +5,7 @@ describe("portfolio content", () => {
   // Guards against accidental CV chronology or public-link drift.
   it("preserves the approved career chronology and public links", () => {
     expect(portfolio.roles.map((role) => role.company)).toEqual([
-      "Madar — Obeikan Digital Solutions",
+      "Madar Logistics Platform — an Elm company",
       "T-Vencubator",
       "Digital Roots GTC",
       "Softlock",

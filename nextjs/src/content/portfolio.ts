@@ -19,7 +19,7 @@ export const portfolio = {
   ],
   roles: [
     {
-      company: "Madar — Obeikan Digital Solutions",
+      company: "Madar Logistics Platform — an Elm company",
       title: "Senior Software Engineer, Team Lead",
       period: "2024 — Present",
       domain: "Logistics",
@@ -91,7 +91,7 @@ export const portfolio = {
     },
   ],
   education: {
-    degree: "Computer Science",
+    degree: "Computer Software Engineering",
     institution: "Higher Technological Institute (HTI)",
     period: "2015 — 2019",
   },
