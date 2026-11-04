@@ -84,19 +84,20 @@ h1 { max-width: 870px; margin-top: 24px; font-size: clamp(3.6rem, 7.2vw, 6.75rem
 .metric:last-child { border: 0; }
 .metric strong { display: block; color: var(--text); font: 600 clamp(2rem, 4vw, 3.5rem)/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; }
 .metric span { display: block; margin-top: 10px; color: var(--muted); font-size: 14px; }
-section { padding: 120px 0; }
+section { padding: 96px 0; }
 .section-head { display: grid; grid-template-columns: 190px 1fr; gap: 42px; align-items: start; margin-bottom: 62px; }
 .section-head h2 { max-width: 740px; font-size: clamp(2.5rem, 5vw, 4.8rem); }
 .timeline { border-top: 1px solid var(--line); }
 .role { display: grid; grid-template-columns: 190px 1fr; gap: 42px; padding: 42px 0; border-bottom: 1px solid var(--line); }
 .role time { color: var(--muted); font: 500 13px/1.5 "IBM Plex Mono", monospace; }
 .role-top { display: flex; gap: 24px; justify-content: space-between; align-items: baseline; }
-.role h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+.role h3 { font-size: clamp(1.35rem, 2.2vw, 1.85rem); }
+.role .company { display: block; margin-top: 6px; color: var(--text); opacity: .72; font-size: 15px; font-weight: 500; }
 .role .place { color: var(--mint); font: 500 13px/1.5 "IBM Plex Mono", monospace; white-space: nowrap; }
 .role p { max-width: 760px; margin: 18px 0 0; color: var(--muted); }
 .capabilities { background: var(--surface); border-block: 1px solid var(--line); }
 .cap-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.cap-card { min-height: 270px; padding: 32px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(20,28,38,.85), rgba(13,19,27,.4)); transition: border-color .25s, transform .25s; }
+.cap-card { min-height: 230px; padding: 32px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(20,28,38,.85), rgba(13,19,27,.4)); transition: border-color .25s, transform .25s; }
 .cap-card:hover { transform: translateY(-4px); border-color: rgba(83,224,193,.42); }
 .cap-no { color: var(--mint); font: 500 12px/1.5 "IBM Plex Mono", monospace; }
 .cap-card h3 { margin-top: 40px; font-size: 1.65rem; }
@@ -104,6 +105,9 @@ section { padding: 120px 0; }
 .tags span { padding: 7px 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
 .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .profile-card { padding: 34px; border: 1px solid var(--line); border-radius: 18px; }
+.profile-card h3 { margin-top: 14px; }
+.profile-card h3 a { text-decoration: none; transition: color .2s; }
+.profile-card h3 a:hover { color: var(--mint); }
 .profile-card p { margin: 12px 0 0; color: var(--muted); }
 .contact { padding-bottom: 64px; }
 .contact-box { position: relative; overflow: hidden; padding: clamp(38px, 8vw, 92px); border: 1px solid rgba(83,224,193,.35); border-radius: 26px; background: linear-gradient(135deg, #101b20, #0c151c); }

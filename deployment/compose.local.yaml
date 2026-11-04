@@ -1,0 +1,11 @@
+# Local override: docker compose -f deployment/compose.yaml -f deployment/compose.local.yaml up -d --build
+name: ahmed-portfolio-local
+
+services:
+  portfolio:
+    ports:
+      - "127.0.0.1:8080:80"
+
+networks:
+  web:
+    external: false

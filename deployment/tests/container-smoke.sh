@@ -8,6 +8,12 @@ port=""
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 repo_root="$(cd -- "$script_dir/../.." && pwd -P)"
 
+# Caddy owns ports 80 and 443 on the server, so production Compose must not publish any.
+if docker compose -f "$repo_root/deployment/compose.yaml" config | grep --quiet "published:"; then
+  echo "deployment/compose.yaml must not publish host ports" >&2
+  exit 1
+fi
+
 cleanup() {
   if [[ -n "$container_id" ]]; then
     docker rm --force "$container_id" >/dev/null 2>&1 || true
