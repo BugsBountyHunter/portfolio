@@ -21,6 +21,7 @@ export function MobileNav({ email }: { email: Portfolio["links"]["email"] }) {
       <nav id="primary-nav" className={`nav-links${open ? " open" : ""}`} aria-label="Primary navigation">
         <a href="#experience" onClick={() => setOpen(false)}>Experience</a>
         <a href="#capabilities" onClick={() => setOpen(false)}>Capabilities</a>
+        <a href="#projects" onClick={() => setOpen(false)}>Projects</a>
         <a href="#about" onClick={() => setOpen(false)}>About</a>
         <a className="contact-link" href={email} onClick={() => setOpen(false)}>Let&apos;s talk</a>
       </nav>

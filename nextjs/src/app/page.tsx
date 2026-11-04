@@ -6,6 +6,7 @@ import { Experience } from "@/components/Experience";
 import { Foundation } from "@/components/Foundation";
 import { Hero } from "@/components/Hero";
 import { Metrics } from "@/components/Metrics";
+import { Projects } from "@/components/Projects";
 import { Reveal } from "@/components/Reveal";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -21,6 +22,7 @@ export default function HomePage() {
         <Metrics metrics={portfolio.metrics} />
         <Experience roles={portfolio.roles} />
         <Capabilities capabilities={portfolio.capabilities} />
+        <Projects projects={portfolio.projects} />
         <Foundation education={portfolio.education} languages={portfolio.languages} />
         <Contact email={portfolio.links.email} />
       </main>

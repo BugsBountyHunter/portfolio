@@ -10,7 +10,7 @@ export function Experience({ roles }: { roles: Portfolio["roles"] }) {
             <article className="role reveal visible" key={role.company}>
               <time>{role.period}</time>
               <div>
-                <div className="role-top"><h3>{role.title} · {role.company}</h3><span className="place">{role.domain} · {role.mode}</span></div>
+                <div className="role-top"><div><h3>{role.title}</h3><span className="company">{role.company}</span></div><span className="place">{role.domain} · {role.mode}</span></div>
                 <p>{role.description}</p>
               </div>
             </article>

@@ -1,7 +1,7 @@
 export const portfolio = {
   profile: {
     name: "Ahmed Saber",
-    title: "Senior Software Engineer",
+    title: "Senior Software Engineer & Team Lead",
     location: "Cairo, Egypt",
     summary:
       "I’m Ahmed Saber, a full-stack engineer with 6+ years of experience turning complex logistics, fintech, ERP, and security challenges into scalable software.",
@@ -15,21 +15,21 @@ export const portfolio = {
     { value: "6+", label: "Years engineering products" },
     { value: "4", label: "Business domains" },
     { value: "3", label: "Modern frontend platforms" },
-    { value: "20–30%", label: "Estimated AI productivity lift" },
+    { value: "2019", label: "Building production software since" },
   ],
   roles: [
     {
       company: "Madar — Obeikan Digital Solutions",
-      title: "Senior Software Engineer",
+      title: "Senior Software Engineer, Team Lead",
       period: "2024 — Present",
       domain: "Logistics",
       mode: "Hybrid",
       description:
-        "Building technology for freight coordination, shipment tracking, and delivery optimization while improving supply-chain visibility across Obeikan Digital Solutions.",
+        "Lead the backend team of a logistics platform built on NestJS microservices, overseeing service architecture, contributing hands-on, and owning code review and quality standards.",
     },
     {
       company: "T-Vencubator",
-      title: "Senior Software Engineer",
+      title: "Software Engineer",
       period: "2023 — 2024",
       domain: "FinTech",
       mode: "Hybrid",
@@ -75,6 +75,19 @@ export const portfolio = {
       label: "Engineering practice",
       headline: "Clean delivery with automation built in.",
       tags: ["CI/CD", "Jest", "ELK", "Datadog", "AI tooling"],
+    },
+  ],
+  projects: [
+    {
+      name: "Layout Fixer",
+      description:
+        "Free, open-source tool that fixes text typed with the wrong Arabic or English keyboard layout, as a browser extension and a desktop app.",
+      href: "https://www.layoutfixer.dev",
+    },
+    {
+      name: "NestJS Scraper",
+      description: "Web scraper built with NestJS, Playwright, BullMQ job queues, proxy rotation, and PostgreSQL.",
+      href: "https://github.com/BugsBountyHunter/nestjs-scraper",
     },
   ],
   education: {

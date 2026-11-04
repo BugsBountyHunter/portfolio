@@ -58,7 +58,7 @@ test("renders the approved portfolio structure", async ({ page }) => {
   await expect(portfolio.capabilities.getByRole("article")).toHaveCount(4);
   await expect(portfolio.heading).toContainText("move business forward");
   await expect(page.getByRole("link", { name: /start a conversation/i })).toHaveAttribute("href", "mailto:developersaber@gmail.com");
-  await expect(portfolio.sections).toHaveCount(5);
+  await expect(portfolio.sections).toHaveCount(6);
   expect(await portfolio.sections.evaluateAll((sections) => sections.map((section) => section.id))).toEqual(["top", "experience", "capabilities", "about", "contact"]);
   await expect(portfolio.foundation.getByRole("article")).toHaveCount(2);
 });
@@ -88,7 +88,7 @@ test("mobile navigation exposes section links and closes after choosing one", as
   await portfolio.menu.click();
   await expect(portfolio.menu).toHaveAttribute("aria-expanded", "true");
   await expect(portfolio.navigation).toBeVisible();
-  for (const name of ["Experience", "Capabilities", "About", "Let's talk"]) {
+  for (const name of ["Experience", "Capabilities", "Projects", "About", "Let's talk"]) {
     await expect(portfolio.navigation.getByRole("link", { name, exact: true })).toBeVisible();
   }
   await portfolio.navigation.getByRole("link", { name: "Experience", exact: true }).click();
