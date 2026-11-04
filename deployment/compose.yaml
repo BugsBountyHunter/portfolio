@@ -1,3 +1,8 @@
+# Production service. Caddy owns ports 80 and 443 on the server and reaches this
+# container over the shared `web` network. `compose.local.yaml` publishes a port for
+# local runs. The project name matches the container already running on the server.
+name: source
+
 services:
   portfolio:
     build:
@@ -8,8 +13,7 @@ services:
     container_name: ahmed-saber-portfolio
     platform: linux/amd64
     restart: unless-stopped
-    ports:
-      - "80:80"
+    networks: [web]
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1/healthz"]
       interval: 30s
@@ -21,3 +25,7 @@ services:
         limits:
           cpus: "0.50"
           memory: 128M
+
+networks:
+  web:
+    external: true
