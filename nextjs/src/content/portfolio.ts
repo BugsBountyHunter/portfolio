@@ -91,7 +91,7 @@ export const portfolio = {
     },
   ],
   education: {
-    degree: "Computer Science",
+    degree: "Computer Software Engineering",
     institution: "Higher Technological Institute (HTI)",
     period: "2015 — 2019",
   },
