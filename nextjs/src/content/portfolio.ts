@@ -19,7 +19,7 @@ export const portfolio = {
   ],
   roles: [
     {
-      company: "Madar — Obeikan Digital Solutions",
+      company: "Madar Logistics Platform — an Elm company",
       title: "Senior Software Engineer, Team Lead",
       period: "2024 — Present",
       domain: "Logistics",
